@@ -1,0 +1,16 @@
+D:\Projects\CovertToFirebase\CovertToFirebase\bin\Debug\ExcelToMongoDB.exe.config
+D:\Projects\CovertToFirebase\CovertToFirebase\bin\Debug\ExcelToMongoDB.exe
+D:\Projects\CovertToFirebase\CovertToFirebase\bin\Debug\ExcelToMongoDB.pdb
+D:\Projects\CovertToFirebase\CovertToFirebase\bin\Debug\MongoDB.Bson.dll
+D:\Projects\CovertToFirebase\CovertToFirebase\bin\Debug\MongoDB.Driver.Core.dll
+D:\Projects\CovertToFirebase\CovertToFirebase\bin\Debug\MongoDB.Driver.dll
+D:\Projects\CovertToFirebase\CovertToFirebase\bin\Debug\System.Runtime.InteropServices.RuntimeInformation.dll
+D:\Projects\CovertToFirebase\CovertToFirebase\bin\Debug\MongoDB.Bson.xml
+D:\Projects\CovertToFirebase\CovertToFirebase\bin\Debug\MongoDB.Driver.xml
+D:\Projects\CovertToFirebase\CovertToFirebase\bin\Debug\MongoDB.Driver.Core.xml
+D:\Projects\CovertToFirebase\CovertToFirebase\obj\Debug\ExcelToMongoDB.csprojResolveAssemblyReference.cache
+D:\Projects\CovertToFirebase\CovertToFirebase\obj\Debug\CovertToFirebase.Form1.resources
+D:\Projects\CovertToFirebase\CovertToFirebase\obj\Debug\ExcelToMongoDB.Properties.Resources.resources
+D:\Projects\CovertToFirebase\CovertToFirebase\obj\Debug\ExcelToMongoDB.csproj.GenerateResource.Cache
+D:\Projects\CovertToFirebase\CovertToFirebase\obj\Debug\ExcelToMongoDB.exe
+D:\Projects\CovertToFirebase\CovertToFirebase\obj\Debug\ExcelToMongoDB.pdb

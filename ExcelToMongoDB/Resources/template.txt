@@ -1,0 +1,27 @@
+var _data[table] = function () {
+    this.list = [];
+
+    this.Add = function ([columns]) {
+        var data = {};
+
+        data.tablename = "[table]";
+        data.id = GUID();
+[adddata]
+
+        this.list.push(data);
+    };
+
+    this.InitializeData = function () {
+[initdata]
+    };
+
+};
+
+var data[table] = new _data[table]();
+data[table].InitializeData();
+
+    this.WriteToDB[utable] = function (data) {
+        if (data) {
+            [fbdata]
+        }
+    };
