@@ -37,45 +37,44 @@ namespace CovertToFirebase
 
         }
 
-        public bool ProcessFile(Excel._Worksheet worksheet, string dept, ref List<string> ids)
+        public bool ProcessFile(Excel._Worksheet worksheet, string dept)
         {
             string worksheetname = "";
             Excel.Range xlRange = worksheet.UsedRange;
             worksheetname = worksheet.Name;
             department = dept;
+            bool unique = true;
 
             var val = "";
 
-                //ID
+            //ID
             try
             {
                 val = xlRange.Cells[1, 1].Value2;
                 if (val != null)
                 {
                     string temp = val.ToString();
+                    string fin = "";
+
                     if (temp.Contains(":"))
                     {
                         string[] ar = temp.Split(':');
-                        if (CodeExists(ar[1].Trim()) > 0)
-                        {
-                            LogError(worksheetname + ": " + "Project code '" + ar[1].Trim() + "' already exists in the database ");
-                            return false;
-                        }
-                        else
-                        {
-                            code = ar[1].Trim();
-                        }
+                        fin = ar[1].Trim();
                     }
+                    else if (temp.Contains("Project ID "))
+                    {
+                        fin = temp.Replace("Project ID ", "").Trim();
+                    }
+                    else
+                    {
+                        fin = temp.Trim();
+                    }
+                    code = fin;
+
 
                 }
                 else
                     code = "";
-
-                if (code != "" && ids.Contains(code))
-                {
-                    LogError(worksheetname + ": " + "Duplicate Project ID " + code);
-                    return false;
-                }
 
             }
             catch (Exception ex)
@@ -83,21 +82,13 @@ namespace CovertToFirebase
                 LogError(worksheetname + ": " + "Invalid data at field 'ID'.");
             }
 
-                //Name
+            //Name
             try
             {
                 val = xlRange.Cells[2, 2].Value2;
                 if (val != null)
                 {
-                    if (PrjNameExists(val.ToString().Trim()) > 0)
-                    {
-                        LogError(worksheetname + ": " + "Project name '"+ val.ToString().Trim() +"' already exists in the database ");
-                        return false;
-                    }
-                    else
-                    {
-                        name = val.ToString().Trim();
-                    }
+                    name = val.ToString().Trim();
                 }
                 else
                     name = "";
@@ -107,7 +98,7 @@ namespace CovertToFirebase
                 LogError(worksheetname + ": " + "Invalid data at field 'Project Name'.");
             }
 
-                //Country
+            //Country
             try
             {
                 val = xlRange.Cells[2, 6].Value2;
@@ -124,7 +115,7 @@ namespace CovertToFirebase
                 LogError(worksheetname + ": " + "Invalid data at field 'Country'.");
             }
 
-                //Project Location Within Country
+            //Project Location Within Country
             try
             {
                 val = xlRange.Cells[4, 1].Value2;
@@ -141,7 +132,7 @@ namespace CovertToFirebase
                 LogError(worksheetname + ": " + "Invalid data at field 'Project Location Within Country'.");
             }
 
-                //StartDate
+            //StartDate
             try
             {
                 val = xlRange.Cells[4, 4].Text;
@@ -158,7 +149,7 @@ namespace CovertToFirebase
                 LogError(worksheetname + ": " + "Invalid data at field 'Starting Date'.");
             }
 
-                //EndDate
+            //EndDate
             try
             {
                 val = xlRange.Cells[4, 6].Text;
@@ -175,7 +166,7 @@ namespace CovertToFirebase
                 LogError(worksheetname + ": " + "Invalid data at field 'Completion Date'.");
             }
 
-                //Client
+            //Client
             try
             {
                 val = xlRange.Cells[5, 2].Value2;
@@ -192,7 +183,7 @@ namespace CovertToFirebase
                 LogError(worksheetname + ": " + "Invalid data at field 'Name of Client'.");
             }
 
-                //ContractValue
+            //ContractValue
             try
             {
                 val = xlRange.Cells[5, 6].Text;
@@ -211,7 +202,7 @@ namespace CovertToFirebase
                 LogError(worksheetname + ": " + "Invalid data at field 'Total Contract Value (THB)'.");
             }
 
-                //Status
+            //Status
             try
             {
                 val = xlRange.Cells[6, 2].Value2;
@@ -228,7 +219,7 @@ namespace CovertToFirebase
                 LogError(worksheetname + ": " + "Invalid data at field 'Project Status'.");
             }
 
-                //Coordinator
+            //Coordinator
             try
             {
                 val = xlRange.Cells[6, 6].Value2;
@@ -245,7 +236,7 @@ namespace CovertToFirebase
                 LogError(worksheetname + ": " + "Invalid data at field 'Project Coordinator'.");
             }
 
-                //Keywords
+            //Keywords
             try
             {
                 val = xlRange.Cells[7, 2].Value2;
@@ -264,7 +255,7 @@ namespace CovertToFirebase
 
             var index = 9;
 
-                //ProjectSeniorStaff
+            //ProjectSeniorStaff
             try
             {
                 val = xlRange.Cells[index, 1].Value2;
@@ -283,10 +274,10 @@ namespace CovertToFirebase
                             cPerson p = new cPerson(val.ToString().Trim(), "");
                             seniorstaff.Add(p);
                         }
-                            index++;
-                            val = xlRange.Cells[index, 1].Value2;
-                            if (val.ToString().Trim() == "Detailed Narrative Description of Project:")
-                                break;
+                        index++;
+                        val = xlRange.Cells[index, 1].Value2;
+                        if (val.ToString().Trim() == "Detailed Narrative Description of Project:")
+                            break;
                     }
                 }
             }
@@ -295,7 +286,7 @@ namespace CovertToFirebase
                 LogError(worksheetname + ": " + "Invalid data at field 'Senior Staff Involved and Functions Performed'.");
             }
 
-                //ProjectDescription
+            //ProjectDescription
             try
             {
                 index += 1;
@@ -306,7 +297,7 @@ namespace CovertToFirebase
                 LogError(worksheetname + ": " + "Invalid data at field 'Detailed Narrative Description of Project'.");
             }
 
-                //ProjectServices
+            //ProjectServices
             try
             {
                 index += 2;
@@ -349,7 +340,13 @@ namespace CovertToFirebase
                 LogError(worksheetname + ": " + "Invalid data at field 'Description of Services Provided'.");
             }
 
-            return true;
+            if ((CodeExists(code) > 0) && (PrjNameExists(name) > 0))
+            {
+                LogError(worksheetname + ": Updated entry");
+                unique = false;
+            }
+
+            return unique;
         }
 
         public string CleanString(string value)
@@ -373,8 +370,6 @@ namespace CovertToFirebase
 
             var count = collection.Count(new BsonDocument("code", code));
 
-            Console.WriteLine("code: " + code + "count: " + count);
-
             return count;
         }
 
@@ -386,8 +381,6 @@ namespace CovertToFirebase
             var collection = db.GetCollection<cProject>("ztest");
 
             var count = collection.Count(new BsonDocument("name", name));
-
-            Console.WriteLine("name: " + name + "count: " + count);
 
             return count;
         }

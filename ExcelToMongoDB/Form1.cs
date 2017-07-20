@@ -68,17 +68,32 @@ namespace CovertToFirebase
                 //Read File
                 Excel.Application xlApp = new Excel.Application();
                 Excel.Workbook xlWorkbook = xlApp.Workbooks.Open(file);
-                List<string> projids = new List<string>();
 
                 for (var i = 1; i <= xlWorkbook.Sheets.Count; i++)
                 {
                     Excel._Worksheet xlWorksheet = xlWorkbook.Sheets[i];
                     cProject proj = new cProject();
                     proj.LogError += Proj_LogError;
-                    if(proj.ProcessFile(xlWorksheet, textBox2.Text, ref projids))
+                    if(proj.ProcessFile(xlWorksheet, textBox2.Text))
                     {
                         ret.AppendLine(new JavaScriptSerializer().Serialize(proj));
-                        JSONToMongoDB(new JavaScriptSerializer().Serialize(proj).ToString());
+                        JSONToMongoDB(new JavaScriptSerializer().Serialize(proj).ToString(), "insert", "", "");
+                    }
+                    else
+                    {
+                        string field = "";
+                        string val = "";
+                        if (proj.code != null)
+                        {
+                            field = "code";
+                            val = proj.code;
+                        }
+                        else if (proj.name != null)
+                        {
+                            field = "name";
+                            val = proj.name;
+                        }
+                        JSONToMongoDB(new JavaScriptSerializer().Serialize(proj).ToString(), "replace", field, val);
                     }
                     if (i== xlWorkbook.Sheets.Count)
                     {
@@ -98,7 +113,7 @@ namespace CovertToFirebase
             txtLog.Text = bld.ToString();
         }
 
-        public void JSONToMongoDB (string file)
+        public void JSONToMongoDB (string file, string act, string field, string val)
         {
             var connectionString = "mongodb://192.168.42.85:27017";
             var client = new MongoClient(connectionString);
@@ -106,7 +121,21 @@ namespace CovertToFirebase
             var collection = db.GetCollection<BsonDocument>("ztest");
 
             MongoDB.Bson.BsonDocument document = MongoDB.Bson.Serialization.BsonSerializer.Deserialize<BsonDocument>(file);
-            collection.InsertOne(document);
+
+            switch (act)
+            {
+                case "insert":
+                    collection.InsertOne(document);
+                    break;
+                case "replace":
+                    var filter = new BsonDocument(field, val);
+                    collection.FindOneAndReplace(filter, document);
+                    break;
+                default:
+                    Console.WriteLine("You just broke the code.");
+                    break;
+            }
+            
 
         }
     }
