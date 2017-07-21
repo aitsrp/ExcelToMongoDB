@@ -93,11 +93,12 @@ namespace CovertToFirebase
                             field = "name";
                             val = proj.name;
                         }
+                        ret.AppendLine(new JavaScriptSerializer().Serialize(proj));
                         JSONToMongoDB(new JavaScriptSerializer().Serialize(proj).ToString(), "replace", field, val);
                     }
                     if (i== xlWorkbook.Sheets.Count)
                     {
-                        Proj_LogError("Workbook '" + xlWorkbook.Name + "' done");
+                        Proj_LogError("Workbook '" + xlWorkbook.Name + "' done: " + xlWorkbook.Sheets.Count + " worksheet(s)");
                     }
                 }
             }
@@ -118,7 +119,7 @@ namespace CovertToFirebase
             var connectionString = "mongodb://192.168.42.85:27017";
             var client = new MongoClient(connectionString);
             var db = client.GetDatabase("local");
-            var collection = db.GetCollection<BsonDocument>("ztest");
+            var collection = db.GetCollection<BsonDocument>("projects");
 
             MongoDB.Bson.BsonDocument document = MongoDB.Bson.Serialization.BsonSerializer.Deserialize<BsonDocument>(file);
 

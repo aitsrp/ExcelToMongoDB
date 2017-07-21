@@ -366,7 +366,7 @@ namespace CovertToFirebase
             var connectionString = "mongodb://192.168.42.85:27017";
             var client = new MongoClient(connectionString);
             var db = client.GetDatabase("local");
-            var collection = db.GetCollection<cProject>("ztest");
+            var collection = db.GetCollection<cProject>("projects");
 
             var count = collection.Count(new BsonDocument("code", code));
 
@@ -378,7 +378,7 @@ namespace CovertToFirebase
             var connectionString = "mongodb://192.168.42.85:27017";
             var client = new MongoClient(connectionString);
             var db = client.GetDatabase("local");
-            var collection = db.GetCollection<cProject>("ztest");
+            var collection = db.GetCollection<cProject>("projects");
 
             var count = collection.Count(new BsonDocument("name", name));
 
