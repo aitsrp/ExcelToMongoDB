@@ -18,9 +18,16 @@ namespace CovertToFirebase
 {
     public partial class Form1 : Form
     {
+
+        List<string> countriesInDB = new List<string>();
+        List<string> clientsInDB = new List<string>();
+
         public Form1()
         {
             InitializeComponent();
+            // Uncomment these to see existing items in the DB through the console:
+            // listItemsFromDB("clients");
+            // listItemsFromDB("country");
         }
 
         private void textBox1_DragEnter(object sender, DragEventArgs e)
@@ -49,7 +56,7 @@ namespace CovertToFirebase
                     string path = filelist[i];
                     FileInfo inf = new FileInfo(path);
                     textBox1.Text += ExcelToJSON(path);
-                    if (i == filelist.Length-1)
+                    if (i == filelist.Length - 1)
                     {
                         Proj_LogError("Process done");
                     }
@@ -74,7 +81,7 @@ namespace CovertToFirebase
                     Excel._Worksheet xlWorksheet = xlWorkbook.Sheets[i];
                     cProject proj = new cProject();
                     proj.LogError += Proj_LogError;
-                    if(proj.ProcessFile(xlWorksheet, textBox2.Text))
+                    if (proj.ProcessFile(xlWorksheet, textBox2.Text))
                     {
                         ret.AppendLine(new JavaScriptSerializer().Serialize(proj));
                         JSONToMongoDB(new JavaScriptSerializer().Serialize(proj).ToString(), "insert", "", "");
@@ -87,16 +94,17 @@ namespace CovertToFirebase
                         {
                             field = "code";
                             val = proj.code;
+                            JSONToMongoDB(new JavaScriptSerializer().Serialize(proj).ToString(), "replace", field, val);
                         }
                         else if (proj.name != null)
                         {
                             field = "name";
                             val = proj.name;
+                            JSONToMongoDB(new JavaScriptSerializer().Serialize(proj).ToString(), "replace", field, val);
                         }
                         ret.AppendLine(new JavaScriptSerializer().Serialize(proj));
-                        JSONToMongoDB(new JavaScriptSerializer().Serialize(proj).ToString(), "replace", field, val);
                     }
-                    if (i== xlWorkbook.Sheets.Count)
+                    if (i == xlWorkbook.Sheets.Count)
                     {
                         Proj_LogError("Workbook '" + xlWorkbook.Name + "' done: " + xlWorkbook.Sheets.Count + " worksheet(s)");
                     }
@@ -114,12 +122,12 @@ namespace CovertToFirebase
             txtLog.Text = bld.ToString();
         }
 
-        public void JSONToMongoDB (string file, string act, string field, string val)
+        public void JSONToMongoDB(string file, string act, string field, string val)
         {
             var connectionString = "mongodb://192.168.42.85:27017";
             var client = new MongoClient(connectionString);
             var db = client.GetDatabase("local");
-            var collection = db.GetCollection<BsonDocument>("projects");
+            var collection = db.GetCollection<BsonDocument>("ztest");
 
             MongoDB.Bson.BsonDocument document = MongoDB.Bson.Serialization.BsonSerializer.Deserialize<BsonDocument>(file);
 
@@ -136,8 +144,57 @@ namespace CovertToFirebase
                     Console.WriteLine("You just broke the code.");
                     break;
             }
-            
+        }
 
+        public void listItemsFromDB(string table)
+        {
+            var connectionString = "mongodb://192.168.42.85:27017";
+            var client = new MongoClient(connectionString);
+            var db = client.GetDatabase("local");
+            var filter = new BsonDocument();
+            switch (table)
+            {
+                case "clients":
+                    clientsInDB.Clear();
+                    var clientCollection = db.GetCollection<BsonDocument>(table);
+                    using (var cursor = clientCollection.Find(filter).ToCursor())
+                    {
+                        while (cursor.MoveNext())
+                        {
+                            foreach (var doc in cursor.Current)
+                            {
+                                clientsInDB.Add(doc["name"].ToString());
+                            }
+                            //for reading
+                            foreach (string c in clientsInDB)
+                            {
+                                Console.WriteLine("clientsInDB: " + c);
+                            }
+                        }
+                        Console.WriteLine("Number of clients: " + clientsInDB.Count);//count the number of items in list
+                    }
+                    break;
+                case "country":
+                    countriesInDB.Clear();
+                    var countryCollection = db.GetCollection<BsonDocument>(table);
+                    using (var cursor = countryCollection.Find(filter).ToCursor())
+                    {
+                        while (cursor.MoveNext())
+                        {
+                            foreach (var doc in cursor.Current)
+                            {
+                                countriesInDB.Add(doc["Name"].ToString());
+                            }
+                            //for reading
+                            foreach (string c in countriesInDB)
+                            {
+                                Console.WriteLine("countriesInDB: " + c);
+                            }
+                        }
+                        Console.WriteLine("Number of countries: " + countriesInDB.Count);//count the number of items in list
+                    }
+                    break;
+            }
         }
     }
 }

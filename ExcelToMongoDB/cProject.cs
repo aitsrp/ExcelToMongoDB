@@ -340,10 +340,23 @@ namespace CovertToFirebase
                 LogError(worksheetname + ": " + "Invalid data at field 'Description of Services Provided'.");
             }
 
-            if ((CodeExists(code) > 0) && (PrjNameExists(name) > 0))
+            if (ClientExists(client) == 0) // if client name does not exist on the official list
             {
-                LogError(worksheetname + ": Updated entry");
+                LogError(worksheetname + ": " + "client name: " + client + " does not exist on the list.");
                 unique = false;
+            }
+            else if (CountrytExists(country) == 0) // if country does not exist on the official list
+            {
+                LogError(worksheetname + ": " + "country: " + country + " does not exist on the list.");
+                unique = false;
+            }
+            else
+            {
+                if ((CodeExists(code) > 0) && (PrjNameExists(name) > 0)) // if project code or project name already exists in the database
+                {
+                    LogError(worksheetname + ": Updated entry");
+                    unique = false;
+                }
             }
 
             return unique;
@@ -364,9 +377,9 @@ namespace CovertToFirebase
         public long CodeExists(string code)
         {
             var connectionString = "mongodb://192.168.42.85:27017";
-            var client = new MongoClient(connectionString);
-            var db = client.GetDatabase("local");
-            var collection = db.GetCollection<cProject>("projects");
+            var dbclient = new MongoClient(connectionString);
+            var db = dbclient.GetDatabase("local");
+            var collection = db.GetCollection<cProject>("ztest");
 
             var count = collection.Count(new BsonDocument("code", code));
 
@@ -376,11 +389,37 @@ namespace CovertToFirebase
         public long PrjNameExists(string name)
         {
             var connectionString = "mongodb://192.168.42.85:27017";
-            var client = new MongoClient(connectionString);
-            var db = client.GetDatabase("local");
-            var collection = db.GetCollection<cProject>("projects");
+            var dbclient = new MongoClient(connectionString);
+            var db = dbclient.GetDatabase("local");
+            var collection = db.GetCollection<cProject>("ztest");
 
             var count = collection.Count(new BsonDocument("name", name));
+
+            return count;
+        }
+
+        public long ClientExists(string client)
+        {
+            var connectionString = "mongodb://192.168.42.85:27017";
+            var dbclient = new MongoClient(connectionString);
+            var db = dbclient.GetDatabase("local");
+            var collection = db.GetCollection<cProject>("clients");
+
+            var count = collection.Count(new BsonDocument("name", client));
+            Console.WriteLine("count: "+count);
+
+            return count;
+        }
+
+        public long CountrytExists(string country)
+        {
+            var connectionString = "mongodb://192.168.42.85:27017";
+            var dbclient = new MongoClient(connectionString);
+            var db = dbclient.GetDatabase("local");
+            var collection = db.GetCollection<cProject>("country");
+
+            var count = collection.Count(new BsonDocument("Name", country));
+            Console.WriteLine("count: " + count);
 
             return count;
         }
