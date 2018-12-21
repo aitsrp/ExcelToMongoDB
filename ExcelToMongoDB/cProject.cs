@@ -79,7 +79,7 @@ namespace CovertToFirebase
             }
             catch (Exception ex)
             {
-                LogError(worksheetname + ": " + "Invalid data at field 'ID'.");
+                LogError(worksheetname.Trim() + ": " + "Invalid data at field 'ID'.");
             }
 
             //Name
@@ -95,7 +95,7 @@ namespace CovertToFirebase
             }
             catch (Exception ex)
             {
-                LogError(worksheetname + ": " + "Invalid data at field 'Project Name'.");
+                LogError(worksheetname.Trim() + ": " + "Invalid data at field 'Project Name'.");
             }
 
             //Country
@@ -112,7 +112,7 @@ namespace CovertToFirebase
             }
             catch (Exception ex)
             {
-                LogError(worksheetname + ": " + "Invalid data at field 'Country'.");
+                LogError(worksheetname.Trim() + ": " + "Invalid data at field 'Country'.");
             }
 
             //Project Location Within Country
@@ -129,7 +129,7 @@ namespace CovertToFirebase
             }
             catch (Exception ex)
             {
-                LogError(worksheetname + ": " + "Invalid data at field 'Project Location Within Country'.");
+                LogError(worksheetname.Trim() + ": " + "Invalid data at field 'Project Location Within Country'.");
             }
 
             //StartDate
@@ -146,7 +146,7 @@ namespace CovertToFirebase
             }
             catch (Exception ex)
             {
-                LogError(worksheetname + ": " + "Invalid data at field 'Starting Date'.");
+                LogError(worksheetname.Trim() + ": " + "Invalid data at field 'Starting Date'.");
             }
 
             //EndDate
@@ -163,7 +163,7 @@ namespace CovertToFirebase
             }
             catch (Exception ex)
             {
-                LogError(worksheetname + ": " + "Invalid data at field 'Completion Date'.");
+                LogError(worksheetname.Trim() + ": " + "Invalid data at field 'Completion Date'.");
             }
 
             //Client
@@ -180,7 +180,7 @@ namespace CovertToFirebase
             }
             catch (Exception ex)
             {
-                LogError(worksheetname + ": " + "Invalid data at field 'Name of Client'.");
+                LogError(worksheetname.Trim() + ": " + "Invalid data at field 'Name of Client'.");
             }
 
             //ContractValue
@@ -199,7 +199,7 @@ namespace CovertToFirebase
             }
             catch (Exception ex)
             {
-                LogError(worksheetname + ": " + "Invalid data at field 'Total Contract Value (THB)'.");
+                LogError(worksheetname.Trim() + ": " + "Invalid data at field 'Total Contract Value (THB)'.");
             }
 
             //Status
@@ -216,7 +216,7 @@ namespace CovertToFirebase
             }
             catch (Exception ex)
             {
-                LogError(worksheetname + ": " + "Invalid data at field 'Project Status'.");
+                LogError(worksheetname.Trim() + ": " + "Invalid data at field 'Project Status'.");
             }
 
             //Coordinator
@@ -233,7 +233,7 @@ namespace CovertToFirebase
             }
             catch (Exception ex)
             {
-                LogError(worksheetname + ": " + "Invalid data at field 'Project Coordinator'.");
+                LogError(worksheetname.Trim() + ": " + "Invalid data at field 'Project Coordinator'.");
             }
 
             //Keywords
@@ -250,7 +250,7 @@ namespace CovertToFirebase
             }
             catch (Exception ex)
             {
-                LogError(worksheetname + ": " + "Invalid data at field 'Keywords'.");
+                LogError(worksheetname.Trim() + ": " + "Invalid data at field 'Keywords'.");
             }
 
             var index = 9;
@@ -283,7 +283,7 @@ namespace CovertToFirebase
             }
             catch (Exception ex)
             {
-                LogError(worksheetname + ": " + "Invalid data at field 'Senior Staff Involved and Functions Performed'.");
+                LogError(worksheetname.Trim() + ": " + "Invalid data at field 'Senior Staff Involved and Functions Performed'.");
             }
 
             //ProjectDescription
@@ -294,7 +294,7 @@ namespace CovertToFirebase
             }
             catch (Exception ex)
             {
-                LogError(worksheetname + ": " + "Invalid data at field 'Detailed Narrative Description of Project'.");
+                LogError(worksheetname.Trim() + ": " + "Invalid data at field 'Detailed Narrative Description of Project'.");
             }
 
             //ProjectServices
@@ -325,7 +325,7 @@ namespace CovertToFirebase
                         }
                         else
                         {
-                            LogError(worksheetname + ": " + "Invalid format at field 'Description of Services Provided'.");
+                            LogError(worksheetname.Trim() + ": " + "Invalid format at field 'Description of Services Provided'.");
                         }
                         index++;
                     }
@@ -337,24 +337,24 @@ namespace CovertToFirebase
             }
             catch (Exception ex)
             {
-                LogError(worksheetname + ": " + "Invalid data at field 'Description of Services Provided'.");
+                LogError(worksheetname.Trim() + ": " + "Invalid data at field 'Description of Services Provided'.");
             }
 
             if (ClientExists(client) == 0) // if client name does not exist on the official list
             {
-                LogError(worksheetname + ": " + "client name: " + client + " does not exist on the list.");
+                LogError(worksheetname.Trim() + ": " + "client name: " + client + " does not exist on the list.");
                 unique = false;
             }
             else if (CountrytExists(country) == 0) // if country does not exist on the official list
             {
-                LogError(worksheetname + ": " + "country: " + country + " does not exist on the list.");
+                LogError(worksheetname.Trim() + ": " + "country: " + country + " does not exist on the list.");
                 unique = false;
             }
             else
             {
                 if ((CodeExists(code) > 0) && (PrjNameExists(name) > 0)) // if project code or project name already exists in the database
                 {
-                    LogError(worksheetname + ": Updated entry");
+                    LogError(worksheetname.Trim() + ": Updated entry");
                     unique = false;
                 }
             }
@@ -422,6 +422,16 @@ namespace CovertToFirebase
             Console.WriteLine("count: " + count);
 
             return count;
+        }
+
+        public string ClientRename(string client)
+        {
+            var newName = "";
+            var list1 = new List<string>();
+            string[] array1 = new string[] {};
+            list1.AddRange(array1);
+
+            return newName;
         }
     }
 

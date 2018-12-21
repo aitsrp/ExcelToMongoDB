@@ -30,3 +30,4 @@ D:\Projects\ExcelToMongoDB\ExcelToMongoDB\obj\Debug\ExcelToMongoDB.Properties.Re
 D:\Projects\ExcelToMongoDB\ExcelToMongoDB\obj\Debug\ExcelToMongoDB.csproj.GenerateResource.Cache
 D:\Projects\ExcelToMongoDB\ExcelToMongoDB\obj\Debug\ExcelToMongoDB.exe
 D:\Projects\ExcelToMongoDB\ExcelToMongoDB\obj\Debug\ExcelToMongoDB.pdb
+D:\Projects\ExcelToMongoDB\ExcelToMongoDB\obj\Debug\ExcelToMongoDB.csproj.CoreCompileInputs.cache
